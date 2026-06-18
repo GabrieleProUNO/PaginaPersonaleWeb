@@ -18,7 +18,9 @@ const links = [
 
 <header class="site-header">
   <div class="wrap site-header__inner">
-    <a class="brand" href={home} aria-label="Gabriele Pittui — home">GP</a>
+    <a class="brand" href={home} aria-label="Prugna Studio — home">
+      <img src="/brand/prugna-studio.png" alt="Prugna Studio" width="425" height="192" />
+    </a>
 
     <nav class="nav" aria-label="Primary">
       {links.map((l) => <a href={l.href}>{l.label}</a>)}
@@ -52,11 +54,14 @@ const links = [
     height: 64px;
   }
   .brand {
-    font-family: var(--font-mono);
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    font-size: 1.1rem;
+    display: inline-flex;
+    align-items: center;
+    background: #f4efe4; /* placca chiara: il logo resta leggibile in entrambi i temi */
+    border-radius: 10px;
+    padding: 6px 10px;
+    line-height: 0;
   }
+  .brand img { height: 34px; width: auto; display: block; }
   .nav {
     display: flex;
     gap: 28px;
@@ -74,7 +79,7 @@ const links = [
     .nav.open {
       display: flex;
       position: absolute;
-      top: 64px; left: 0; right: 0;
+      top: 100%; left: 0; right: 0;
       flex-direction: column;
       gap: 18px;
       padding: 24px clamp(20px, 6vw, 120px) 32px;
@@ -82,6 +87,14 @@ const links = [
       border-bottom: var(--stroke) solid var(--border);
     }
     .burger { display: flex; }
+  }
+
+  /* Telefoni: header più compatto, niente sovrapposizioni */
+  @media (max-width: 480px) {
+    .site-header__inner { gap: 10px; height: auto; min-height: 58px; padding-block: 8px; }
+    .brand { padding: 5px 8px; }
+    .brand img { height: 26px; }
+    .controls { gap: 2px; }
   }
 </style>
 

@@ -28,12 +28,18 @@ const home = localizePath('/', lang);
 
   <!-- Nucleo centrale: contenuti testuali sovrapposti -->
   <div class="hero__core wrap">
+    <p class="hero__name">{t('hero.name')}</p>
     <p class="hero__kicker kicker">{t('hero.kicker')}</p>
     <h1 class="hero__title">
       {t('hero.title.light')} <em>{t('hero.title.and')}</em> {t('hero.title.logic')}.
     </h1>
     <p class="hero__subtitle">{t('hero.subtitle')}</p>
     <p class="hero__hint" aria-hidden="true">{t('hero.hint')}</p>
+    <!-- CTA visibili solo su mobile (su desktop la navigazione è lo split) -->
+    <div class="hero__cta">
+      <a class="btn btn-primary" href={`${home}#luce`}>{t('hero.cta.luce')}</a>
+      <a class="btn btn-ghost" href={`${home}#logica`}>{t('hero.cta.logica')}</a>
+    </div>
   </div>
 
   <div class="aperture" id="aperture" aria-hidden="true"></div>
@@ -93,6 +99,15 @@ const home = localizePath('/', lang);
     max-width: 22ch;
   }
   .hero__core > * { pointer-events: auto; }
+  .hero__name {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: var(--text-lg);
+    letter-spacing: 0.04em;
+    color: #fff;
+    mix-blend-mode: difference;
+    margin-bottom: 10px;
+  }
   .hero__kicker { color: var(--clay-300); mix-blend-mode: difference; }
   .hero__title {
     font-family: var(--font-editorial);
@@ -134,12 +149,36 @@ const home = localizePath('/', lang);
   .aperture.logica { border-radius: 4px; }   /* sopra Logica → quadrato */
   .aperture.luce { border-radius: 50%; }      /* sopra Luce → cerchio */
 
+  /* CTA: nascoste su desktop (lo split è la navigazione), visibili su mobile */
+  .hero__cta { display: none; gap: 12px; margin-top: 32px; flex-wrap: wrap; }
+
+  /* ---------- MOBILE: niente split sovrapposto, hero pulito e leggibile ---------- */
   @media (max-width: 760px) {
-    .hero__split { position: static; display: grid; }
-    .hero__half { position: relative; inset: auto; clip-path: none !important; min-height: 44vh; }
-    .hero__half--luce { text-align: left; align-items: flex-start; }
-    .hero__core { position: absolute; top: 0; }
+    .hero { min-height: auto; overflow: visible; }
+    /* lo split asimmetrico è un effetto desktop: su mobile lo nascondiamo */
+    .hero__split, .aperture { display: none; }
+    /* il nucleo diventa l'hero vero e proprio, in flusso normale e leggibile */
+    .hero__core {
+      position: static;
+      min-height: auto;
+      max-width: none;
+      justify-content: flex-start;
+      padding-block: 48px 24px;
+    }
+    .hero__name, .hero__kicker, .hero__subtitle { mix-blend-mode: normal; }
+    .hero__name { color: var(--ink); }
+    .hero__kicker { color: var(--accent); }
+    .hero__subtitle { color: var(--ink-muted); max-width: none; }
+    .hero__title {
+      mix-blend-mode: normal;
+      color: var(--ink);
+      font-size: clamp(2.6rem, 13vw, 3.6rem);
+    }
+    .hero__title em { color: var(--accent); }
+    .hero__hint { display: none; }
+    .hero__cta { display: flex; }
   }
+
   @media (pointer: coarse), (prefers-reduced-motion: reduce) {
     .aperture { display: none; }
   }

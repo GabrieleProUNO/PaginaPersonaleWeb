@@ -1,0 +1,10 @@
+METTI QUI LA TUA FOTO DEL "CHI SONO".
+
+Salva l'immagine (jpg/jpeg/png/webp) in questa cartella:
+  src/assets/about/
+
+Qualsiasi nome va bene (es. gabriele.jpg). Il sito prende automaticamente
+la prima immagine che trova qui e la ottimizza (AVIF/WebP) al build.
+Se ce ne metti più di una, viene usata la prima in ordine alfabetico.
+
+Dopo averla messa, lancia di nuovo:  npm run build   (oppure npm run dev)
