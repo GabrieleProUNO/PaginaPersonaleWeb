@@ -1,0 +1,23 @@
+{
+  "name": "gabriele-pittui-portfolio",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Portfolio personale di Gabriele Pittui — Luce e Logica. Astro + Tailwind.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "postbuild": "node scripts/prune-dist.mjs",
+    "preview": "astro preview",
+    "astro": "astro",
+    "import:images": "node scripts/import-images.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^5.7.0",
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.0",
+    "tailwindcss": "^4.1.0"
+  }
+}

@@ -1,0 +1,16 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageGallery from '../../../components/PageGallery.astro';
+import { collaborations, exhibitions, galleryTitle } from '../../../data/content';
+
+export function getStaticPaths() {
+  return [...collaborations, ...exhibitions].map((g) => ({ params: { slug: g.slug } }));
+}
+
+const { slug } = Astro.params;
+const title = galleryTitle(slug!, 'en');
+---
+
+<Base lang="en" title={`${title} — Gabriele Pittui`} description={`Photo gallery: ${title}. Portfolio of Gabriele Pittui.`}>
+  <PageGallery slug={slug!} lang="en" />
+</Base>

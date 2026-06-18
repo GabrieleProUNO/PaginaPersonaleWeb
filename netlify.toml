@@ -1,0 +1,42 @@
+# Configurazione Netlify — build + sicurezza + caching.
+# Netlify esegue `npm run build` e pubblica la cartella `dist/` (unica cartella
+# autosufficiente che contiene HTML + immagini ottimizzate in /_astro).
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# ---------------------------------------------------------------------------
+# Header di sicurezza applicati a tutte le risposte.
+# ---------------------------------------------------------------------------
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Content Security Policy: consente solo le origini effettivamente usate.
+    # - script: solo dal sito (gli inline necessari sono minimi); 'unsafe-inline'
+    #   copre lo snippet che imposta la modalità prima del paint.
+    # - style/font: il sito + Google Fonts.
+    # - img: il sito + data URI (placeholder).
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; upgrade-insecure-requests"
+    # Impedisce l'incorporamento del sito in iframe altrui (clickjacking).
+    X-Frame-Options = "DENY"
+    # Blocca il MIME-sniffing.
+    X-Content-Type-Options = "nosniff"
+    # Limita le informazioni di referrer inviate ad altri siti.
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    # Disattiva API potenti non usate dal sito.
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+    # Forza HTTPS per due anni (attivo solo quando il dominio è in HTTPS).
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+    # Isolamento cross-origin di base.
+    Cross-Origin-Opener-Policy = "same-origin"
+    X-DNS-Prefetch-Control = "off"
+
+# Cache lunga e immutabile per gli asset con hash nel nome (immagini, CSS, JS).
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

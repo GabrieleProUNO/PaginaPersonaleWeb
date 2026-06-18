@@ -1,0 +1,338 @@
+@import 'tailwindcss';
+
+/* ============================================================================
+   GABRIELE PITTUI — "Luce e Logica"
+   Design system (Fase 2) tradotto in token. Bi-modale via [data-mode].
+   ========================================================================== */
+
+@theme {
+  /* Famiglie tipografiche (caricate via <link> in Head.astro) */
+  --font-editorial: 'Fraunces', Georgia, 'Times New Roman', serif; /* Luce */
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace; /* Logica */
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; /* corpo / ponte */
+  --font-accent: 'Shippori Mincho', serif; /* accento giapponese */
+
+  /* Scala tipografica — ratio 1.250 */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.563rem;
+  --text-2xl: 1.953rem;
+  --text-3xl: 3.052rem;
+
+  /* Spaziatura (scala 8px) — esposta come utilità Tailwind se serve */
+  --spacing: 0.5rem;
+}
+
+:root {
+  /* ---- Ponte / condivisi ---- */
+  --clay-500: #a8a093;
+  --clay-300: #c4bdb1;
+  --clay-700: #7c7568;
+  --amber-500: #c68a3e;
+  --amber-600: #a8722e;
+  --amber-300: #dbae72;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+  --stroke: 0.5px;
+  --shadow-soft: 0 1px 2px rgba(22, 24, 28, 0.06), 0 8px 24px rgba(22, 24, 28, 0.08);
+
+  /* Motion */
+  --dur-micro: 120ms;
+  --dur: 240ms;
+  --dur-tide: 640ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Larghezze layout */
+  --content-max: 1280px;
+  --gutter: 24px;
+}
+
+/* ============================ LUCE (default) ============================ */
+:root,
+[data-mode='luce'] {
+  --bg: #ede7d9;
+  --bg-elev: #f4efe4;
+  --bg-elev-2: #fbf8f0;
+  --ink: #1f2024;
+  --ink-muted: #5a574e;
+  --ink-faint: #928d80;
+  --primary: #6e7253;
+  --primary-hover: #5c603f;
+  --primary-soft: #dfe0cf;
+  --on-primary: #f4efe4;
+  --accent: var(--amber-600);
+  --border: rgba(31, 32, 36, 0.14);
+  --border-strong: rgba(31, 32, 36, 0.3);
+  --focus: #a8722e;
+  /* Titoli in modalità Luce → editoriale */
+  --font-display: var(--font-editorial);
+  --display-weight: 400;
+  --display-spacing: -0.01em;
+  --display-transform: none;
+}
+
+/* ============================ LOGICA ============================ */
+[data-mode='logica'] {
+  --bg: #16181c;
+  --bg-elev: #1e2127;
+  --bg-elev-2: #262a31;
+  --ink: #e9e3d6;
+  --ink-muted: #a7a296;
+  --ink-faint: #6e6a60;
+  --primary: #2e4a6b;
+  --primary-hover: #3a5c84;
+  --primary-soft: #202e40;
+  --on-primary: #e9e3d6;
+  --accent: var(--amber-500);
+  --border: rgba(233, 227, 214, 0.14);
+  --border-strong: rgba(233, 227, 214, 0.3);
+  --focus: #dbae72;
+  /* Titoli in modalità Logica → monospazio */
+  --font-display: var(--font-mono);
+  --display-weight: 700;
+  --display-spacing: 0.02em;
+  --display-transform: uppercase;
+}
+
+/* ============================ BASE ============================ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* La "marea": il cambio di tema è ammorbidito da una transizione di colore */
+    transition: background-color var(--dur-tide) var(--ease-soft),
+      color var(--dur-tide) var(--ease-soft);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    letter-spacing: var(--display-spacing);
+    text-transform: var(--display-transform);
+    line-height: 1.1;
+    color: var(--ink);
+  }
+
+  h1 {
+    font-size: clamp(2.4rem, 7vw, var(--text-3xl));
+  }
+  h2 {
+    font-size: var(--text-2xl);
+  }
+  h3 {
+    font-size: var(--text-xl);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  /* Accessibilità: focus sempre visibile, ring ambra */
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+}
+
+/* ============================ COMPONENTI ============================ */
+@layer components {
+  .wrap {
+    width: 100%;
+    max-width: var(--content-max);
+    margin-inline: auto;
+    padding-inline: clamp(20px, 6vw, 120px);
+  }
+
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .lead {
+    font-size: var(--text-lg);
+    color: var(--ink-muted);
+    max-width: 60ch;
+  }
+
+  /* Bottoni */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    padding: 11px 20px;
+    border-radius: var(--radius-md);
+    border: var(--stroke) solid transparent;
+    cursor: pointer;
+    transition: transform var(--dur-micro) var(--ease-soft),
+      background-color var(--dur) var(--ease-soft),
+      border-color var(--dur) var(--ease-soft), color var(--dur) var(--ease-soft);
+  }
+  .btn:active {
+    transform: scale(0.985);
+  }
+  .btn-primary {
+    background: var(--primary);
+    color: var(--on-primary);
+  }
+  .btn-primary:hover {
+    background: var(--primary-hover);
+  }
+  .btn-ghost {
+    border-color: var(--border-strong);
+    color: var(--ink);
+  }
+  .btn-ghost:hover {
+    background: var(--bg-elev);
+  }
+  .btn-accent {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .btn-accent:hover {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  /* Pill (tag / metadati) */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    border: var(--stroke) solid var(--border-strong);
+    color: var(--ink-muted);
+    background: var(--bg-elev);
+  }
+
+  /* Card case-study (Logica) */
+  .case-card {
+    display: block;
+    background: var(--bg-elev);
+    border: var(--stroke) solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    transition: border-color var(--dur) var(--ease-soft),
+      transform var(--dur) var(--ease-out);
+  }
+  .case-card:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-3px);
+  }
+  .case-card:hover .case-card__title {
+    color: var(--accent);
+  }
+  .case-card__index {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--ink-faint);
+  }
+  .case-card__title {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-size: var(--text-xl);
+    margin: 10px 0 12px;
+    transition: color var(--dur) var(--ease-soft);
+  }
+
+  /* Griglia galleria (masonry via columns) */
+  .masonry {
+    column-gap: 16px;
+    columns: 1;
+  }
+  @media (min-width: 640px) {
+    .masonry {
+      columns: 2;
+    }
+  }
+  @media (min-width: 1024px) {
+    .masonry {
+      columns: 3;
+    }
+  }
+  .masonry > * {
+    break-inside: avoid;
+    margin-bottom: 16px;
+  }
+
+  .gallery-item {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    background: var(--clay-300);
+    cursor: zoom-in;
+    display: block;
+  }
+  .gallery-item img {
+    width: 100%;
+    transition: transform var(--dur) var(--ease-out),
+      filter var(--dur) var(--ease-soft);
+  }
+  .gallery-item:hover img {
+    transform: scale(1.03);
+  }
+}
+
+/* ============================ MOTION SAFETY ============================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.12s !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Utility: visivamente nascosto ma leggibile dagli screen reader */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

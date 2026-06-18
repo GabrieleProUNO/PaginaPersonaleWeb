@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base lang="it" title="404 — Pagina non trovata · Gabriele Pittui" description="Pagina non trovata.">
+  <section class="nf wrap">
+    <p class="kicker">Errore 404</p>
+    <h1>Fuori fuoco.</h1>
+    <p class="lead">La pagina che cerchi non esiste o è stata spostata.</p>
+    <a class="btn btn-accent" href="/">Torna alla home</a>
+  </section>
+</Base>
+
+<style>
+  .nf { min-height: 64vh; display: flex; flex-direction: column; justify-content: center; max-width: 50ch; }
+  .nf h1 { margin: 12px 0 16px; }
+  .nf .btn { margin-top: 28px; align-self: flex-start; }
+</style>

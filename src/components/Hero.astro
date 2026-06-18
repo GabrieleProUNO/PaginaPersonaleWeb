@@ -1,0 +1,182 @@
+---
+// Hero "L'Otturatore": split diagonale asimmetrico Logica/Luce.
+// Il puntatore (su desktop, pointer fine) espande la metà sorvolata, come il
+// diaframma di un obiettivo. Su touch/reduced-motion resta uno split statico
+// impilato verticalmente, pienamente leggibile.
+import { useTranslations, localizePath, type Lang } from '../i18n/utils';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const home = localizePath('/', lang);
+---
+
+<section class="hero" id="top" aria-label="Intro">
+  <div class="hero__split" id="hero-split">
+    <!-- LOGICA -->
+    <a class="hero__half hero__half--logica" href={`${home}#logica`}>
+      <span class="kicker" style="color: var(--amber-300)">{t('nav.logica')}</span>
+      <span class="hero__half-title hero__half-title--mono">{t('hero.title.logic')}</span>
+      <span class="hero__half-desc">{t('mode.logica.intro')}</span>
+    </a>
+    <!-- LUCE -->
+    <a class="hero__half hero__half--luce" href={`${home}#luce`}>
+      <span class="kicker" style="color: var(--amber-600)">{t('nav.luce')}</span>
+      <span class="hero__half-title hero__half-title--serif">{t('hero.title.light')}</span>
+      <span class="hero__half-desc">{t('mode.luce.intro')}</span>
+    </a>
+  </div>
+
+  <!-- Nucleo centrale: contenuti testuali sovrapposti -->
+  <div class="hero__core wrap">
+    <p class="hero__kicker kicker">{t('hero.kicker')}</p>
+    <h1 class="hero__title">
+      {t('hero.title.light')} <em>{t('hero.title.and')}</em> {t('hero.title.logic')}.
+    </h1>
+    <p class="hero__subtitle">{t('hero.subtitle')}</p>
+    <p class="hero__hint" aria-hidden="true">{t('hero.hint')}</p>
+  </div>
+
+  <div class="aperture" id="aperture" aria-hidden="true"></div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 92vh;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .hero__split {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    --pos: 50%;
+  }
+  /* clip diagonale asimmetrico: due metà che combaciano sulla diagonale */
+  .hero__half {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 14px;
+    padding: clamp(28px, 6vw, 96px);
+    transition: clip-path var(--dur) var(--ease-out);
+  }
+  .hero__half--logica {
+    background: #16181c;
+    color: #e9e3d6;
+    clip-path: polygon(0 0, var(--pos) 0, calc(var(--pos) - 12vh) 100%, 0 100%);
+    align-items: flex-start;
+  }
+  .hero__half--luce {
+    background: #ede7d9;
+    color: #1f2024;
+    clip-path: polygon(var(--pos) 0, 100% 0, 100% 100%, calc(var(--pos) - 12vh) 100%);
+    align-items: flex-end;
+    text-align: right;
+  }
+  .hero__half-title { font-size: clamp(2rem, 9vw, 5rem); line-height: 1; }
+  .hero__half-title--mono { font-family: var(--font-mono); font-weight: 700; text-transform: uppercase; }
+  .hero__half-title--serif { font-family: var(--font-editorial); font-weight: 400; }
+  .hero__half-desc { max-width: 30ch; font-size: var(--text-sm); opacity: 0.75; line-height: 1.6; }
+
+  /* Nucleo: blocco testuale centrale leggibile su entrambe le metà */
+  .hero__core {
+    position: relative;
+    z-index: 3;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 92vh;
+    max-width: 22ch;
+  }
+  .hero__core > * { pointer-events: auto; }
+  .hero__kicker { color: var(--clay-300); mix-blend-mode: difference; }
+  .hero__title {
+    font-family: var(--font-editorial);
+    font-weight: 300;
+    font-size: clamp(2.6rem, 8vw, 4.2rem);
+    line-height: 1.05;
+    color: #fff;
+    mix-blend-mode: difference;
+    margin: 12px 0;
+  }
+  .hero__title em { font-style: italic; color: var(--amber-300); }
+  .hero__subtitle { color: #fff; mix-blend-mode: difference; max-width: 36ch; }
+  .hero__hint {
+    margin-top: 28px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--clay-500);
+    mix-blend-mode: difference;
+  }
+
+  /* Cursore-diaframma (solo desktop / pointer fine) */
+  .aperture {
+    position: fixed;
+    top: 0; left: 0;
+    width: 44px; height: 44px;
+    border: 1.5px solid var(--clay-300);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 9000;
+    mix-blend-mode: difference;
+    opacity: 0;
+    transition: opacity var(--dur) var(--ease-soft),
+      border-radius var(--dur) var(--ease-soft), width var(--dur), height var(--dur);
+  }
+  .aperture.show { opacity: 1; }
+  .aperture.logica { border-radius: 4px; }   /* sopra Logica → quadrato */
+  .aperture.luce { border-radius: 50%; }      /* sopra Luce → cerchio */
+
+  @media (max-width: 760px) {
+    .hero__split { position: static; display: grid; }
+    .hero__half { position: relative; inset: auto; clip-path: none !important; min-height: 44vh; }
+    .hero__half--luce { text-align: left; align-items: flex-start; }
+    .hero__core { position: absolute; top: 0; }
+  }
+  @media (pointer: coarse), (prefers-reduced-motion: reduce) {
+    .aperture { display: none; }
+  }
+</style>
+
+<script>
+  const split = document.getElementById('hero-split');
+  const aperture = document.getElementById('aperture');
+  const hero = document.querySelector('.hero') as HTMLElement | null;
+  if (split && hero && window.matchMedia('(pointer: fine)').matches) {
+    let raf = 0;
+    let tx = 0, ty = 0, side = '';
+    const onMove = (e: PointerEvent) => {
+      const rect = hero.getBoundingClientRect();
+      const within = e.clientY >= rect.top && e.clientY <= rect.bottom;
+      tx = e.clientX; ty = e.clientY;
+      side = e.clientX < rect.left + rect.width * 0.5 ? 'logica' : 'luce';
+      if (!raf) raf = requestAnimationFrame(apply);
+      if (within) {
+        // espande la metà sorvolata: pos tra 38% e 62%
+        const ratio = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+        const pos = 38 + ratio * 24;
+        split.style.setProperty('--pos', pos + '%');
+        aperture?.classList.add('show');
+      }
+    };
+    const apply = () => {
+      raf = 0;
+      if (!aperture) return;
+      aperture.style.transform = `translate(${tx}px, ${ty}px) translate(-50%, -50%)`;
+      aperture.classList.toggle('logica', side === 'logica');
+      aperture.classList.toggle('luce', side === 'luce');
+    };
+    window.addEventListener('pointermove', onMove, { passive: true });
+    hero.addEventListener('pointerleave', () => {
+      split.style.setProperty('--pos', '50%');
+      aperture?.classList.remove('show');
+    });
+  }
+</script>

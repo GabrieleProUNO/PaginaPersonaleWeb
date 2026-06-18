@@ -1,0 +1,40 @@
+---
+// Pagina di dettaglio di una galleria. Condivisa IT/EN.
+import GalleryGrid from './GalleryGrid.astro';
+import { useTranslations, localizePath, type Lang } from '../i18n/utils';
+import { galleryTitle, collaborations, exhibitions } from '../data/content';
+import { countGallery } from '../lib/galleries';
+
+interface Props { slug: string; lang: Lang }
+const { slug, lang } = Astro.props;
+const t = useTranslations(lang);
+
+const title = galleryTitle(slug, lang);
+const count = countGallery(slug);
+const collab = collaborations.find((c) => c.slug === slug);
+const exh = exhibitions.find((e) => e.slug === slug);
+const desc = collab?.desc[lang] ?? exh?.desc[lang] ?? '';
+const back = localizePath('/#luce', lang);
+---
+
+<article class="gallery-page wrap">
+  <a class="gallery-page__back" href={back}>← {t('gallery.back')}</a>
+  <header class="gallery-page__head">
+    <p class="kicker">{t('nav.luce')}{count ? ` · ${count} ${t('gallery.count')}` : ''}</p>
+    <h1>{title}</h1>
+    {desc && <p class="lead">{desc}</p>}
+  </header>
+
+  <GalleryGrid slug={slug} lang={lang} />
+</article>
+
+<style>
+  .gallery-page { padding-block: 48px 32px; }
+  .gallery-page__back {
+    font-family: var(--font-mono); font-size: var(--text-sm);
+    color: var(--ink-muted); display: inline-block; margin-bottom: 40px;
+  }
+  .gallery-page__back:hover { color: var(--accent); }
+  .gallery-page__head { max-width: 60ch; margin-bottom: 48px; }
+  .gallery-page__head h1 { margin: 10px 0 16px; }
+</style>

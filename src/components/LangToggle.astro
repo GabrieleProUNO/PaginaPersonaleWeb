@@ -1,0 +1,36 @@
+---
+// Switch lingua IT ⇄ EN. Costruisce l'URL gemello nell'altra lingua
+// mantenendo lo stesso percorso (es. /galleria/x ⇄ /en/galleria/x).
+import { useTranslations, type Lang } from '../i18n/utils';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const path = Astro.url.pathname;
+let target: string;
+if (lang === 'it') {
+  target = '/en' + (path === '/' ? '' : path);
+} else {
+  target = path.replace(/^\/en/, '') || '/';
+}
+---
+
+<a class="lang-toggle" href={target} aria-label={t('toggle.lang')} hreflang={lang === 'it' ? 'en' : 'it'}>
+  <span class:list={[{ active: lang === 'it' }]}>IT</span>
+  <span aria-hidden="true">/</span>
+  <span class:list={[{ active: lang === 'en' }]}>EN</span>
+</a>
+
+<style>
+  .lang-toggle {
+    display: inline-flex;
+    gap: 5px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--ink-faint);
+    padding: 7px 10px;
+  }
+  .lang-toggle .active { color: var(--ink); }
+  .lang-toggle:hover { color: var(--accent); }
+</style>

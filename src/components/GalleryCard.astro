@@ -1,0 +1,72 @@
+---
+// Card "copertina" di una galleria/collaborazione: immagine + testo,
+// linka alla pagina di dettaglio. Se la cartella è vuota mostra un placeholder.
+import { Image } from 'astro:assets';
+import { coverOf, countGallery } from '../lib/galleries';
+import { useTranslations, localizePath, type Lang } from '../i18n/utils';
+
+interface Props {
+  slug: string;
+  title: string;
+  desc: string;
+  lang: Lang;
+}
+const { slug, title, desc, lang } = Astro.props;
+const t = useTranslations(lang);
+const cover = coverOf(slug);
+const count = countGallery(slug);
+const href = localizePath(`/galleria/${slug}`, lang);
+---
+
+<a class="gcard" href={href}>
+  <div class="gcard__media">
+    {cover ? (
+      <Image src={cover} alt={title} widths={[400, 720]} sizes="(max-width: 700px) 100vw, 50vw" loading="lazy" />
+    ) : (
+      <div class="gcard__placeholder"><span class="kicker">{t('gallery.empty')}</span></div>
+    )}
+    {count > 0 && <span class="gcard__count">{count} {t('gallery.count')}</span>}
+  </div>
+  <h3 class="gcard__title">{title}</h3>
+  <p class="gcard__desc">{desc}</p>
+</a>
+
+<style>
+  .gcard { display: block; }
+  .gcard__media {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    background: var(--clay-300);
+    border: var(--stroke) solid var(--border);
+  }
+  .gcard__media :global(img) {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform var(--dur) var(--ease-out), filter var(--dur) var(--ease-soft);
+    filter: saturate(0.92);
+  }
+  .gcard:hover .gcard__media :global(img) { transform: scale(1.04); filter: saturate(1); }
+  .gcard__placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg-elev);
+  }
+  .gcard__count {
+    position: absolute; bottom: 12px; right: 12px;
+    font-family: var(--font-mono); font-size: 11px;
+    background: color-mix(in srgb, var(--bg) 70%, transparent);
+    border: var(--stroke) solid var(--border-strong);
+    border-radius: var(--radius-pill);
+    padding: 3px 9px;
+    backdrop-filter: blur(4px);
+  }
+  .gcard__title {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    margin: 16px 0 6px;
+    transition: color var(--dur) var(--ease-soft);
+  }
+  .gcard:hover .gcard__title { color: var(--accent); }
+  .gcard__desc { color: var(--ink-muted); font-size: var(--text-sm); max-width: 42ch; }
+</style>

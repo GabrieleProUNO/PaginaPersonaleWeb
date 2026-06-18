@@ -1,0 +1,54 @@
+---
+import { useTranslations, type Lang } from '../i18n/utils';
+import { certifications } from '../data/content';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap site-footer__inner">
+    <div>
+      <p class="site-footer__claim">{t('footer.claim')}</p>
+      <p class="site-footer__role">{t('footer.role')}</p>
+    </div>
+    <ul class="site-footer__certs" aria-label="Certifications">
+      {certifications.map((c) => <li class="pill">{c}</li>)}
+    </ul>
+    <div class="site-footer__meta">
+      <span class="site-footer__contacts">
+        <a href="mailto:pittuigabriele@gmail.com">pittuigabriele@gmail.com</a>
+        <a href="tel:+393280911595">328 0911595</a>
+      </span>
+      <span>© {year} Gabriele Pittui</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: var(--stroke) solid var(--border);
+    margin-top: 128px;
+    padding-block: 56px;
+  }
+  .site-footer__inner {
+    display: grid;
+    gap: 32px;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 860px) {
+    .site-footer__inner { grid-template-columns: 1fr 1.2fr; align-items: start; }
+    .site-footer__meta { grid-column: 1 / -1; display: flex; justify-content: space-between; }
+  }
+  .site-footer__claim {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    color: var(--ink);
+  }
+  .site-footer__role { color: var(--ink-faint); font-size: var(--text-sm); margin-top: 6px; }
+  .site-footer__certs { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 0; }
+  .site-footer__meta { color: var(--ink-faint); font-size: var(--text-sm); margin-top: 24px; gap: 16px; flex-wrap: wrap; }
+  .site-footer__meta a:hover { color: var(--accent); }
+  .site-footer__contacts { display: flex; gap: 20px; flex-wrap: wrap; }
+</style>

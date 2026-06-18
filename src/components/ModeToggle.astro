@@ -1,0 +1,90 @@
+---
+// Interruttore Luce ↔ Logica. Scrive data-mode su <html>, persiste in
+// localStorage e innesca la "marea" (overlay Argilla che attraversa lo schermo).
+import { useTranslations, type Lang } from '../i18n/utils';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<button id="mode-toggle" class="mode-toggle" type="button" aria-label={t('toggle.mode')}>
+  <span class="mode-toggle__dot" aria-hidden="true"></span>
+  <span class="mode-toggle__label" data-label-luce="Luce" data-label-logica="Logica"></span>
+</button>
+
+<div id="mode-tide" class="mode-tide" aria-hidden="true"></div>
+
+<style>
+  .mode-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: transparent;
+    border: var(--stroke) solid var(--border-strong);
+    border-radius: var(--radius-pill);
+    padding: 7px 14px;
+    cursor: pointer;
+    transition: border-color var(--dur) var(--ease-soft);
+  }
+  .mode-toggle:hover { border-color: var(--accent); }
+  .mode-toggle__dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--accent);
+    transition: border-radius var(--dur) var(--ease-soft);
+  }
+  /* in Logica il "diaframma" diventa quadrato */
+  :global([data-mode='logica']) .mode-toggle__dot { border-radius: 2px; }
+
+  .mode-tide {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    background: linear-gradient(90deg, var(--clay-700), var(--clay-300));
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  .mode-tide.run {
+    animation: tide var(--dur-tide) var(--ease-soft);
+  }
+  @keyframes tide {
+    0% { transform: translateX(-100%); opacity: 0.9; }
+    50% { transform: translateX(0); opacity: 0.9; }
+    100% { transform: translateX(100%); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mode-tide.run { animation: none; }
+  }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const btn = document.getElementById('mode-toggle');
+  const tide = document.getElementById('mode-tide');
+  const label = btn?.querySelector('.mode-toggle__label') as HTMLElement | null;
+
+  function syncLabel() {
+    if (!label) return;
+    const mode = root.getAttribute('data-mode');
+    label.textContent =
+      mode === 'logica' ? label.dataset.labelLogica! : label.dataset.labelLuce!;
+  }
+
+  syncLabel();
+
+  btn?.addEventListener('click', () => {
+    const next = root.getAttribute('data-mode') === 'logica' ? 'luce' : 'logica';
+    // marea
+    tide?.classList.remove('run');
+    void tide?.offsetWidth; // forza il reflow per riavviare l'animazione
+    tide?.classList.add('run');
+    root.setAttribute('data-mode', next);
+    try { localStorage.setItem('gp-mode', next); } catch {}
+    syncLabel();
+  });
+</script>

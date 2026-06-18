@@ -1,0 +1,37 @@
+---
+import type { TechProject } from '../data/content';
+import type { Lang } from '../i18n/utils';
+interface Props { project: TechProject; lang: Lang }
+const { project, lang } = Astro.props;
+---
+
+<article class="case-card">
+  <div class="case-card__head">
+    <span class="case-card__index">{project.index}</span>
+    <span class="case-card__role pill">{project.role[lang]}</span>
+  </div>
+  <h3 class="case-card__title">{project.title}</h3>
+  <p>{project.intro[lang]}</p>
+  <ul class="case-card__tags" aria-label="Stack">
+    {project.tags.map((tag) => <li class="pill">{tag}</li>)}
+  </ul>
+  {project.link && (
+    <a class="case-card__link" href={project.link.href} target="_blank" rel="noopener noreferrer">
+      {project.link.label} ↗
+    </a>
+  )}
+</article>
+
+<style>
+  .case-card__head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .case-card p { color: var(--ink-muted); }
+  .case-card__tags { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 18px 0 0; }
+  .case-card__link {
+    display: inline-block;
+    margin-top: 18px;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--accent);
+  }
+  .case-card__link:hover { text-decoration: underline; }
+</style>

@@ -1,0 +1,98 @@
+---
+import { useTranslations, localizePath, type Lang } from '../i18n/utils';
+import ModeToggle from './ModeToggle.astro';
+import LangToggle from './LangToggle.astro';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const home = localizePath('/', lang);
+
+const links = [
+  { href: `${home}#logica`, label: t('nav.logica') },
+  { href: `${home}#luce`, label: t('nav.luce') },
+  { href: `${home}#about`, label: t('nav.about') },
+  { href: `${home}#contact`, label: t('nav.contact') },
+];
+---
+
+<header class="site-header">
+  <div class="wrap site-header__inner">
+    <a class="brand" href={home} aria-label="Gabriele Pittui — home">GP</a>
+
+    <nav class="nav" aria-label="Primary">
+      {links.map((l) => <a href={l.href}>{l.label}</a>)}
+    </nav>
+
+    <div class="controls">
+      <LangToggle lang={lang} />
+      <ModeToggle lang={lang} />
+    </div>
+
+    <button id="nav-burger" class="burger" type="button" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+    background: color-mix(in srgb, var(--bg) 78%, transparent);
+    border-bottom: var(--stroke) solid var(--border);
+  }
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    height: 64px;
+  }
+  .brand {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    font-size: 1.1rem;
+  }
+  .nav {
+    display: flex;
+    gap: 28px;
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+    margin-inline-start: auto;
+  }
+  .nav a:hover { color: var(--ink); }
+  .controls { display: flex; align-items: center; gap: 6px; }
+  .burger { display: none; flex-direction: column; gap: 5px; background: none; border: 0; cursor: pointer; padding: 8px; }
+  .burger span { width: 22px; height: 1.5px; background: var(--ink); display: block; }
+
+  @media (max-width: 860px) {
+    .nav { display: none; }
+    .nav.open {
+      display: flex;
+      position: absolute;
+      top: 64px; left: 0; right: 0;
+      flex-direction: column;
+      gap: 18px;
+      padding: 24px clamp(20px, 6vw, 120px) 32px;
+      background: var(--bg);
+      border-bottom: var(--stroke) solid var(--border);
+    }
+    .burger { display: flex; }
+  }
+</style>
+
+<script>
+  const burger = document.getElementById('nav-burger');
+  const nav = document.querySelector('.nav');
+  burger?.addEventListener('click', () => {
+    const open = nav?.classList.toggle('open');
+    burger.setAttribute('aria-expanded', String(!!open));
+  });
+  nav?.querySelectorAll('a').forEach((a) =>
+    a.addEventListener('click', () => nav.classList.remove('open'))
+  );
+</script>

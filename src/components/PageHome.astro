@@ -1,0 +1,121 @@
+---
+// Contenuto completo della home (single-page). Condiviso da index.astro (IT)
+// e en/index.astro (EN) — niente duplicazione di markup.
+import Hero from './Hero.astro';
+import CaseStudyCard from './CaseStudyCard.astro';
+import GalleryCard from './GalleryCard.astro';
+import { useTranslations, type Lang } from '../i18n/utils';
+import {
+  techProjects, techSkills, collaborations, exhibitions, creativeSkills,
+} from '../data/content';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<Hero lang={lang} />
+
+<!-- ====================== LOGICA ====================== -->
+<section id="logica" class="section" data-section-mode="logica">
+  <div class="wrap">
+    <header class="section__head">
+      <p class="kicker">{t('nav.logica')}</p>
+      <h2>{t('logica.title')}</h2>
+      <p class="lead">{t('logica.lead')}</p>
+    </header>
+
+    <div class="cards-2">
+      {techProjects.map((p) => <CaseStudyCard project={p} lang={lang} />)}
+    </div>
+
+    <div class="skills">
+      <p class="kicker">{t('skills.tech.title')}</p>
+      <ul>{techSkills.map((s) => <li class="pill">{s}</li>)}</ul>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== LUCE ====================== -->
+<section id="luce" class="section">
+  <div class="wrap">
+    <header class="section__head">
+      <p class="kicker">{t('nav.luce')}</p>
+      <h2>{t('luce.title')}</h2>
+      <p class="lead">{t('luce.lead')}</p>
+    </header>
+
+    <h3 class="section__sub">{t('luce.collab.title')}</h3>
+    <div class="cards-2">
+      {collaborations.map((c) => (
+        <GalleryCard slug={c.slug} title={c.name} desc={c.desc[lang]} lang={lang} />
+      ))}
+    </div>
+
+    <h3 class="section__sub section__sub--gap">{t('luce.exh.title')}</h3>
+    <div class="cards-3">
+      {exhibitions.map((e) => (
+        <GalleryCard slug={e.slug} title={e.title[lang]} desc={e.desc[lang]} lang={lang} />
+      ))}
+    </div>
+
+    <div class="skills">
+      <p class="kicker">{t('skills.creative.title')}</p>
+      <ul>{creativeSkills.map((s) => <li class="pill">{s}</li>)}</ul>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== ABOUT ====================== -->
+<section id="about" class="section">
+  <div class="wrap about-grid">
+    <header class="section__head">
+      <p class="kicker">{t('nav.about')}</p>
+      <h2>{t('about.title')}</h2>
+    </header>
+    <div class="about-grid__body">
+      {t('about.body').map((p) => <p>{p}</p>)}
+      <h3 class="about-coach">{t('about.coach.title')}</h3>
+      {t('about.coach.body').map((p) => <p>{p}</p>)}
+    </div>
+  </div>
+</section>
+
+<!-- ====================== CONTACT ====================== -->
+<section id="contact" class="section">
+  <div class="wrap contact">
+    <p class="kicker">{t('nav.contact')}</p>
+    <h2>{t('contact.title')}</h2>
+    <p class="lead">{t('contact.body')}</p>
+    <div class="contact__actions">
+      <a class="btn btn-accent" href="mailto:pittuigabriele@gmail.com">pittuigabriele@gmail.com</a>
+      <a class="btn btn-ghost" href="tel:+393280911595">328 0911595</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .section { padding-block: clamp(72px, 12vh, 128px); border-top: var(--stroke) solid var(--border); }
+  .section__head { max-width: 60ch; margin-bottom: 48px; }
+  .section__head h2 { margin: 10px 0 16px; }
+  .section__sub { font-size: var(--text-lg); color: var(--ink-muted); margin-bottom: 24px; }
+  .section__sub--gap { margin-top: 64px; }
+
+  /* griglie asimmetriche: i contenuti non partono mai da bordo a bordo simmetrico */
+  .cards-2 { display: grid; gap: 24px; grid-template-columns: 1fr; }
+  .cards-3 { display: grid; gap: 24px; grid-template-columns: 1fr; }
+  @media (min-width: 720px) { .cards-2 { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 900px) { .cards-3 { grid-template-columns: repeat(3, 1fr); } }
+
+  .skills { margin-top: 56px; }
+  .skills ul { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 14px 0 0; }
+
+  .about-grid { display: grid; gap: 40px; grid-template-columns: 1fr; }
+  @media (min-width: 900px) { .about-grid { grid-template-columns: 4fr 8fr; } } /* griglia 4/8 */
+  .about-grid__body p { margin-bottom: 18px; color: var(--ink-muted); max-width: 65ch; }
+  .about-coach { margin: 36px 0 16px; }
+
+  .contact { text-align: center; max-width: 50ch; margin-inline: auto; }
+  .contact h2 { margin: 12px 0 18px; }
+  .contact__actions { margin-top: 28px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+</style>
