@@ -74,7 +74,7 @@ export const collaborations: Collaboration[] = [
     },
   },
   {
-    name: 'Backstage cortometraggi — “Orizzonti”',
+    name: 'Backstage cortometraggi — “Come un tuono”',
     slug: 'backstage-orizzonti',
     desc: {
       it: 'Fotografo di backstage per cortometraggi (2024) e direttore di camera per il progetto “Orizzonti” (2026). Stare dietro la camera mentre nasce un film: luce, movimento, attesa del momento giusto.',
