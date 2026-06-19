@@ -9,7 +9,7 @@ import sitemap from '@astrojs/sitemap';
 // - Tailwind v4 è agganciato come plugin Vite (nessun file tailwind.config necessario:
 //   il tema vive in src/styles/global.css con la direttiva @theme).
 export default defineConfig({
-  site: 'https://gabrielepittui.it',
+  site: 'https://www.gabrielepittui.it',
   i18n: {
     defaultLocale: 'it',
     locales: ['it', 'en'],
