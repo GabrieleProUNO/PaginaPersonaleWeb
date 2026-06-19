@@ -58,6 +58,14 @@ export const techSkills = [
 
 export const collaborations: Collaboration[] = [
   {
+    name: 'Backstage cortometraggi — “Come un temporale”',
+    slug: 'backstage-orizzonti',
+    desc: {
+      it: 'Fotografo di backstage per cortometraggi (2024) e direttore di camera per il progetto “Orizzonti” (2026). Stare dietro la camera mentre nasce un film: luce, movimento, attesa del momento giusto.',
+      en: 'Backstage photographer for short films (2024) and camera operator for the “Orizzonti” project (2026). Standing behind the camera as a film takes shape: light, movement, waiting for the right moment.',
+    },
+  },
+  {
     name: 'Pro Loco di Villa Lagarina',
     slug: 'proloco-villa-lagarina',
     desc: {
@@ -71,14 +79,6 @@ export const collaborations: Collaboration[] = [
     desc: {
       it: 'Divulgatore, grafico e fotografo ufficiale. Dall’immagine singola all’identità visiva di un evento: scatto, comunicazione e grafica in un unico ruolo.',
       en: 'Communicator, designer and official photographer. From the single image to an event’s visual identity: shooting, communication and design in one role.',
-    },
-  },
-  {
-    name: 'Backstage cortometraggi — “Come un temporale”',
-    slug: 'backstage-orizzonti',
-    desc: {
-      it: 'Fotografo di backstage per cortometraggi (2024) e direttore di camera per il progetto “Orizzonti” (2026). Stare dietro la camera mentre nasce un film: luce, movimento, attesa del momento giusto.',
-      en: 'Backstage photographer for short films (2024) and camera operator for the “Orizzonti” project (2026). Standing behind the camera as a film takes shape: light, movement, waiting for the right moment.',
     },
   },
 ];

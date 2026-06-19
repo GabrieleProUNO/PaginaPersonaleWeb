@@ -48,9 +48,24 @@ export function countGallery(slug: string): number {
   return grouped[slug]?.length ?? 0;
 }
 
-/** Prima immagine di una galleria — usata come copertina. */
+// Copertine scelte a mano (nome file dentro src/galleries/<slug>/).
+// Se non specificata, viene usata la prima immagine.
+const COVERS: Record<string, string> = {
+  'backstage-orizzonti': '0009__21A6572.jpg',
+  'moonlight-events': '0023_TZ01062025_5192.jpg',
+  'proloco-villa-lagarina': '0066__SNY0523.jpg',
+};
+
+/** Immagine di copertina di una galleria (scelta a mano se definita, altrimenti la prima). */
 export function coverOf(slug: string): ImageMetadata | undefined {
-  return grouped[slug]?.[0]?.src;
+  const imgs = grouped[slug];
+  if (!imgs || imgs.length === 0) return undefined;
+  const preferred = COVERS[slug];
+  if (preferred) {
+    const found = imgs.find((i) => i.name === preferred);
+    if (found) return found.src;
+  }
+  return imgs[0].src;
 }
 
 /** Elenco degli slug effettivamente popolati. */
