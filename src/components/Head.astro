@@ -15,6 +15,45 @@ const itPath = path.replace(/^\/en(\/|$)/, '/');
 const enPath = path.startsWith('/en') ? path : '/en' + (path === '/' ? '' : path);
 const itHref = new URL(itPath, Astro.site);
 const enHref = new URL(enPath, Astro.site);
+
+// Dati strutturati (JSON-LD): aiutano Google a capire che il sito è di
+// Gabriele Pittui (persona reale, profilo Instagram, città, competenze).
+// Inseriti solo in home per evitare duplicazioni.
+const isHome = path === '/' || path === '/en' || path === '/en/';
+const siteUrl = Astro.site?.toString() ?? '';
+const personLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Gabriele Pittui',
+  alternateName: 'Pittui Gabriele',
+  url: siteUrl,
+  image: new URL('/og-image.jpg', Astro.site).toString(),
+  jobTitle:
+    lang === 'en'
+      ? 'Photographer, videomaker and software developer'
+      : 'Fotografo, videomaker e sviluppatore',
+  email: 'mailto:pittuigabriele@gmail.com',
+  sameAs: ['https://www.instagram.com/pittui_gabriele'],
+  worksFor: { '@type': 'Organization', name: 'Prugna Studio' },
+  alumniOf: { '@type': 'EducationalOrganization', name: 'ITT G. Marconi, Rovereto' },
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Rovereto',
+    addressRegion: 'TN',
+    addressCountry: 'IT',
+  },
+  knowsAbout: [
+    'Fotografia', 'Videomaking', 'Sviluppo software', 'Reti Cisco',
+    'Unity', 'C#', 'Python', 'Java',
+  ],
+};
+const siteLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Gabriele Pittui — Prugna Studio',
+  url: siteUrl,
+  inLanguage: lang === 'en' ? 'en' : 'it',
+};
 ---
 
 <meta charset="utf-8" />
@@ -26,6 +65,10 @@ const enHref = new URL(enPath, Astro.site);
 <link rel="alternate" hreflang="en" href={enHref} />
 <link rel="alternate" hreflang="x-default" href={itHref} />
 <meta name="generator" content={Astro.generator} />
+
+<!-- Dati strutturati per i motori di ricerca (solo home) -->
+{isHome && <script type="application/ld+json" set:html={JSON.stringify(personLd)} />}
+{isHome && <script type="application/ld+json" set:html={JSON.stringify(siteLd)} />}
 
 <!-- Favicon (logo Prugna Studio) -->
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
